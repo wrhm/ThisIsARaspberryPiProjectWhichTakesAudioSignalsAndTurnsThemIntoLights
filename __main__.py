@@ -14,7 +14,7 @@ except ImportError:
 
 # American Pi
 RPI_PIN    = 22
-RPI_PWM_HZ = 1000
+RPI_PWM_HZ = 10000
 
 # Mike Tyson
 BUF_SIZE = 1024
@@ -91,7 +91,7 @@ def main(port, other):
       count = int(buf.decode())
       print(count)
 
-      # lights
+      # Lights, camera, action!
       for step in range(0, BOUNCE_TIME * BOUNCE_STEPS):
         x = (step / (BOUNCE_TIME * BOUNCE_STEPS)) * math.pi
         level = math.sin(x)
@@ -102,6 +102,7 @@ def main(port, other):
 
         time.sleep(1 / BOUNCE_STEPS)
 
+      pwm.ChangeDutyCycle(0)
       client.send(str.encode(str(count + 1)))
 
 if (__name__ == '__main__'):
