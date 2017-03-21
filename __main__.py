@@ -97,12 +97,13 @@ def main(port, other):
         level = math.sin(x)
 
         if(pwm is not None):
-          print(level)
           pwm.ChangeDutyCycle(level * 100)
 
         time.sleep(1 / BOUNCE_STEPS)
 
-      pwm.ChangeDutyCycle(0)
+      if(pwm is not None):
+        pwm.ChangeDutyCycle(0)
+
       client.send(str.encode(str(count + 1)))
 
 if (__name__ == '__main__'):
