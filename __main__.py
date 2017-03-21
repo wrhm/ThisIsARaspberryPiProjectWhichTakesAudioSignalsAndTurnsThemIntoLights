@@ -88,7 +88,7 @@ def main(port, other):
 
     # Rocky IV
     for buf in session(conn, BUF_SIZE):
-      count = int(buf)
+      count = int(buf.decode())
       print(count)
 
       # lights
@@ -97,11 +97,12 @@ def main(port, other):
         level = math.sin(x)
 
         if(pwm is not None):
+          print(level)
           pwm.ChangeDutyCycle(level)
 
         time.sleep(1 / BOUNCE_STEPS)
 
-      client.send(b'%d' % (count + 1))
+      client.send(str.encode(str(count + 1)))
 
 if (__name__ == '__main__'):
   import sys
