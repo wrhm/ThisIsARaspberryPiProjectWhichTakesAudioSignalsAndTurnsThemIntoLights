@@ -51,6 +51,7 @@ def main(port, other, invert):
     GPIO.setup(RPI_PIN, GPIO.OUT)
     pwm = GPIO.PWM(RPI_PIN, RPI_PWM_HZ)
     pwm.start(0)
+    pwm.start(100 if (invert) else 0)
 
   invert = bool(invert)
 
