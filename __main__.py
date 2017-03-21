@@ -96,8 +96,8 @@ def main(port, other, invert):
 
       # Lights, camera, action!
       for step in range(0, BOUNCE_TIME * BOUNCE_STEPS):
-        x = (step / (BOUNCE_TIME * BOUNCE_STEPS)) * 2 * math.pi
-        level = (-(math.cos(x) + 1) / 2)
+        x = (step / (BOUNCE_TIME * BOUNCE_STEPS)) * math.pi
+        level = math.sin(x)
         if(invert):
           level = 1 - level
 
