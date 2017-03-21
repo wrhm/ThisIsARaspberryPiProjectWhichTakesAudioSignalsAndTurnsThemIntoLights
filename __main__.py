@@ -9,7 +9,7 @@ import socket
 import RPi.GPIO as GPIO
 
 # American Pi
-RPI_PIN    = 25
+RPI_PIN    = 22
 RPI_PWM_HZ = 1000
 
 # Mike Tyson
@@ -41,10 +41,10 @@ def session(conn, buf_size):
 @expect(int, str)
 def main(port, other):
   # GPIO for days
-  GPIO.setmode(GPIO.BCM)
+  GPIO.setmode(GPIO.BOARD)
   GPIO.setup(RPI_PIN, GPIO.OUT)
-  d2a = GPIO.PWM(RPI_PIN, RPI_PWM_HZ)
-  d2a.start(0)
+  pwm = GPIO.PWM(RPI_PIN, RPI_PWM_HZ)
+  pwm.start(0)
 
   # Server like a person who serves you food
   print('Starting: localhost, %r' % (port))
@@ -88,7 +88,7 @@ def main(port, other):
       for step in range(0, BOUNCE_TIME * BOUNCE_STEPS):
         x = (step / (BOUNCE_TIME * BOUNCE_STEPS)) * math.pi
         level = math.sin(x)
-        d2a.ChangeDutyCycle(level)
+        pwm.ChangeDutyCycle(level)
         time.sleep(1 / BOUNCE_STEPS)
 
       client.send(b'%d' % (count + 1))
