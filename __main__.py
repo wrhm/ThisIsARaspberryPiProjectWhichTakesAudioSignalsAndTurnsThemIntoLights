@@ -53,9 +53,9 @@ def main(port, other):
     pwm.start(0)
 
   # Server like a person who serves you food
-  print('Starting: localhost, %r' % (port))
+  print('Starting: 0.0.0.0, %r' % (port))
   server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  server.bind(('localhost', port))
+  server.bind(('0.0.0.0', port))
   server.listen(1)
 
   # Only the best for our B2B client's. We leverage the cloud for
