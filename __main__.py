@@ -42,8 +42,8 @@ def session(conn, buf_size):
     yield buf
     buf = conn.recv(buf_size)
 
-@expect(int, str)
-def main(port, other):
+@expect(int, str, int)
+def main(port, other, invert):
   # GPIO for days
   pwm = None
   if(GPIO is not None):
@@ -51,6 +51,8 @@ def main(port, other):
     GPIO.setup(RPI_PIN, GPIO.OUT)
     pwm = GPIO.PWM(RPI_PIN, RPI_PWM_HZ)
     pwm.start(0)
+
+  invert = bool(invert)
 
   # Server like a person who serves you food
   print('Starting: 0.0.0.0, %r' % (port))
@@ -95,6 +97,8 @@ def main(port, other):
       for step in range(0, BOUNCE_TIME * BOUNCE_STEPS):
         x = (step / (BOUNCE_TIME * BOUNCE_STEPS)) * math.pi
         level = math.sin(x)
+        if(invert):
+          level = 1 - level
 
         if(pwm is not None):
           pwm.ChangeDutyCycle(level * 100)
@@ -102,7 +106,7 @@ def main(port, other):
         time.sleep(1 / BOUNCE_STEPS)
 
       if(pwm is not None):
-        pwm.ChangeDutyCycle(0)
+        pwm.ChangeDutyCycle(100 if (invert) else 0)
 
       client.send(str.encode(str(count + 1)))
 
