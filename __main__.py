@@ -98,7 +98,7 @@ def main(port, other):
 
         if(pwm is not None):
           print(level)
-          pwm.ChangeDutyCycle(level)
+          pwm.ChangeDutyCycle(level * 100)
 
         time.sleep(1 / BOUNCE_STEPS)
 
