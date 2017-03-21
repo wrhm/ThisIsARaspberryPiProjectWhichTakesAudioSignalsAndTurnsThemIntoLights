@@ -5,8 +5,12 @@
 import contextlib
 import math
 import socket
+import time
 
-import RPi.GPIO as GPIO
+try:
+  import RPi.GPIO as GPIO
+except ImportError:
+  GPIO = None
 
 # American Pi
 RPI_PIN    = 22
@@ -41,10 +45,12 @@ def session(conn, buf_size):
 @expect(int, str)
 def main(port, other):
   # GPIO for days
-  GPIO.setmode(GPIO.BOARD)
-  GPIO.setup(RPI_PIN, GPIO.OUT)
-  pwm = GPIO.PWM(RPI_PIN, RPI_PWM_HZ)
-  pwm.start(0)
+  pwm = None
+  if(GPIO is not None):
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(RPI_PIN, GPIO.OUT)
+    pwm = GPIO.PWM(RPI_PIN, RPI_PWM_HZ)
+    pwm.start(0)
 
   # Server like a person who serves you food
   print('Starting: localhost, %r' % (port))
@@ -83,12 +89,16 @@ def main(port, other):
     # Rocky IV
     for buf in session(conn, BUF_SIZE):
       count = int(buf)
+      print(count)
 
       # lights
       for step in range(0, BOUNCE_TIME * BOUNCE_STEPS):
         x = (step / (BOUNCE_TIME * BOUNCE_STEPS)) * math.pi
         level = math.sin(x)
-        pwm.ChangeDutyCycle(level)
+
+        if(pwm is not None):
+          pwm.ChangeDutyCycle(level)
+
         time.sleep(1 / BOUNCE_STEPS)
 
       client.send(b'%d' % (count + 1))
